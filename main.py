@@ -21,6 +21,7 @@ def find_mistake_and_correct(query):
     words = query.lower().split()
     original_words = query.split()
     result = []
+    current_pos = 0  # Track the current character position
 
     for i, word in enumerate(words):
         # Check custom grocery dictionary first
@@ -32,9 +33,15 @@ def find_mistake_and_correct(query):
         if suggestions:
             suggestion = suggestions[0]
             if suggestion.term != word:
-                result.append((original_words[i], suggestion.term, i))
+                start_index = query.lower().index(word, current_pos)
+                end_index = start_index + len(word) - 1
+                result.append((original_words[i], suggestion.term, start_index, end_index))
+        current_pos += len(word) + 1  # +1 for the space
+    formatted_result = []
+    for original, corrected, start_index, end_index in result:
+        formatted_result.append(f"Characters {start_index}-{end_index}: '{original}' -> '{corrected}'")
     
-    return result
+    return formatted_result
 
 query = "this is phome"
 mistakes = find_mistake_and_correct(query)

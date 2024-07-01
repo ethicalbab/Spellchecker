@@ -97,7 +97,7 @@ print(f"Mistakes found: {mistakes}")
 Running the script with the query `"this is phome"` will output:
 
 ```
-Mistakes found: [('phome', 'phone', 3)]
+Mistakes found: [('phome', 'home', 3)]
 ```
 
 ## Contributing

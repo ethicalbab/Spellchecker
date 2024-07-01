@@ -49,19 +49,20 @@ This repository contains a script that uses the SymSpell library to find and cor
 Update the `dictionary_path`, `bigram_path`, and `custom_dictionary_path` variables in the script to point to the correct locations of your dictionary files.
 
 ```python
+
 from symspellpy import SymSpell, Verbosity
 
 # Create a SymSpell object
 sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
 
 # Load default dictionary
-dictionary_path = "/path/to/symspellpy/frequency_dictionary_en_82_765.txt"
-bigram_path = "/path/to/symspellpy/frequency_bigramdictionary_en_243_342.txt"
+dictionary_path = "/Users/bab/anaconda3/lib/python3.11/site-packages/symspellpy/frequency_dictionary_en_82_765.txt"
+bigram_path = "/Users/bab/anaconda3/lib/python3.11/site-packages/symspellpy/frequency_bigramdictionary_en_243_342.txt"
 sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
 sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
 
 # Load custom grocery dictionary
-custom_dictionary_path = "path/to/your/grocery_dictionary.txt"
+custom_dictionary_path = "grocery_dictionary.txt"
 if sym_spell.load_dictionary(custom_dictionary_path, term_index=0, count_index=1):
     print(f"Custom grocery dictionary '{custom_dictionary_path}' loaded successfully")
 else:
@@ -72,6 +73,7 @@ def find_mistake_and_correct(query):
     words = query.lower().split()
     original_words = query.split()
     result = []
+    current_pos = 0  # Track the current character position
 
     for i, word in enumerate(words):
         # Check custom grocery dictionary first
@@ -83,13 +85,20 @@ def find_mistake_and_correct(query):
         if suggestions:
             suggestion = suggestions[0]
             if suggestion.term != word:
-                result.append((original_words[i], suggestion.term, i))
+                start_index = query.lower().index(word, current_pos)
+                end_index = start_index + len(word) - 1
+                result.append((original_words[i], suggestion.term, start_index, end_index))
+        current_pos += len(word) + 1  # +1 for the space
+    formatted_result = []
+    for original, corrected, start_index, end_index in result:
+        formatted_result.append(f"Characters {start_index}-{end_index}: '{original}' -> '{corrected}'")
     
-    return result
+    return formatted_result
 
 query = "this is phome"
 mistakes = find_mistake_and_correct(query)
 print(f"Mistakes found: {mistakes}")
+
 ```
 
 ## Example
@@ -97,7 +106,7 @@ print(f"Mistakes found: {mistakes}")
 Running the script with the query `"this is phome"` will output:
 
 ```
-Mistakes found: [('phome', 'home', 3)]
+Mistakes found: ["Characters 8-12: 'phome' -> 'home'"]
 ```
 
 ## Contributing

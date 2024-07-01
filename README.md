@@ -1,6 +1,3 @@
-Certainly! Here’s the `README.md` file for your GitHub repository:
-
-```markdown
 # Spell Checker using SymSpell
 
 This repository contains a script that uses the SymSpell library to find and correct spelling mistakes in a given query. The script utilizes both a default dictionary and a custom grocery dictionary for more accurate corrections.
@@ -16,7 +13,7 @@ This repository contains a script that uses the SymSpell library to find and cor
 
    ```sh
    pip install symspellpy
-   ```
+   
 
 2. **Download the Default Dictionaries:**
 
